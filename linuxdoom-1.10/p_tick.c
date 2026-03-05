@@ -83,6 +83,11 @@ void P_RemoveThinkerNoop (void)
 // Deallocation is lazy -- it will not actually be freed
 // until its thinking turn comes up.
 //
+
+void P_RemoveThinkerNoop (void)
+{
+}
+
 void P_RemoveThinker (thinker_t* thinker)
 {
   thinker->function.acv = (actionf_v)P_RemoveThinkerNoop;
