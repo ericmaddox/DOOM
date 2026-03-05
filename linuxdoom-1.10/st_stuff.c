@@ -628,9 +628,17 @@ ST_Responder (event_t* ev)
 	plyr->cheats ^= CF_NOCLIP;
 	
 	if (plyr->cheats & CF_NOCLIP)
-	  plyr->message = STSTR_NCON;
-	else
-	  plyr->message = STSTR_NCOFF;
+		{
+		  plyr->message = STSTR_NCON;
+		  if (plyr->mo)
+		    plyr->mo->flags |= MF_NOCLIP;
+		}
+		else
+		{
+		  plyr->message = STSTR_NCOFF;
+		  if (plyr->mo)
+		    plyr->mo->flags &= ~MF_NOCLIP;
+		}
       }
       // 'behold?' power-up cheats
       for (i=0;i<6;i++)
