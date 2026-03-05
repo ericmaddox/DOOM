@@ -12,7 +12,18 @@ gcc -DNORMALUNIX -DLINUX -I"${DOOM_DIR}" \
 echo "Running m_random tests..."
 ./test_m_random
 
-echo "Cleaning up..."
+echo "Cleaning up m_random tests..."
 rm test_m_random
+
+echo "Compiling m_misc tests..."
+gcc -DNORMALUNIX -DLINUX -I"${DOOM_DIR}" \
+    "${DOOM_DIR}/test_m_misc.c" \
+    -o test_m_misc
+
+echo "Running m_misc tests..."
+./test_m_misc
+
+echo "Cleaning up m_misc tests..."
+rm test_m_misc
 
 echo "All tests completed."
