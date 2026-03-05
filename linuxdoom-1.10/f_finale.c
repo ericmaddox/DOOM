@@ -181,7 +181,8 @@ void F_StartFinale (void)
       default:
 	S_ChangeMusic(mus_read_m, true);
 	finaleflat = "F_SKY1"; // Not used anywhere else.
-	finaletext = c1text;  // FIXME - other text, music?
+	// Fallback for indeterminate IWADs
+	finaletext = c1text;
 	break;
     }
     
