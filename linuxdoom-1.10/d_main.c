@@ -611,7 +611,7 @@ void IdentifyVersion (void)
     home = getenv("HOME");
     if (!home)
       I_Error("Please set $HOME to your home directory");
-    sprintf(basedefault, "%s/.doomrc", home);
+    snprintf(basedefault, sizeof(basedefault), "%s/.doomrc", home);
 #endif
 
     if (M_CheckParm ("-shdev"))
