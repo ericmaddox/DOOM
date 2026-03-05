@@ -735,11 +735,42 @@ I_InitSound()
   else
     snprintf(buffer, sizeof(buffer), "%s", sndserver_filename);
   
+  // remove trailing space before checking access
+  {
+    char *p = buffer + strlen(buffer) - 1;
+    while (p >= buffer && *p == ' ') {
+      *p = '\0';
+      p--;
+    }
+  }
+
   // start sound process
   if ( !access(buffer, X_OK) )
   {
-    strcat(buffer, " -quiet");
-    sndserver = popen(buffer, "w");
+    int pfd[2];
+    pid_t pid;
+    if (pipe(pfd) == 0)
+    {
+      pid = fork();
+      if (pid == 0)
+      {
+        close(pfd[1]);
+        dup2(pfd[0], 0);
+        close(pfd[0]);
+        execlp(buffer, buffer, "-quiet", (char*)NULL);
+        _exit(1);
+      }
+      else if (pid > 0)
+      {
+        close(pfd[0]);
+        sndserver = fdopen(pfd[1], "w");
+      }
+      else
+      {
+        close(pfd[0]);
+        close(pfd[1]);
+      }
+    }
   }
   else
     fprintf(stderr, "Could not start sound server [%s]\n", buffer);
