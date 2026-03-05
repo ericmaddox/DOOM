@@ -85,7 +85,6 @@ void P_RemoveThinkerNoop (void)
 //
 void P_RemoveThinker (thinker_t* thinker)
 {
-  // FIXME: NOP.
   thinker->function.acv = (actionf_v)P_RemoveThinkerNoop;
 }
 
