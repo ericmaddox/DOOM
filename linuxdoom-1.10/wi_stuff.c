@@ -1606,16 +1606,15 @@ void WI_loadData(void)
 		a = &anims[wbs->epsd][j];
 		for (i=0;i<a->nanims;i++)
 		{
-		    // MONDO HACK!
-		    if (wbs->epsd != 1 || j != 8) 
+		    // animations
+		    sprintf(name, "WIA%d%.2d%.2d", wbs->epsd, j, i);
+		    if (W_CheckNumForName(name) != -1)
 		    {
-			// animations
-			sprintf(name, "WIA%d%.2d%.2d", wbs->epsd, j, i);  
 			a->p[i] = W_CacheLumpName(name, PU_STATIC);
 		    }
 		    else
 		    {
-			// HACK ALERT!
+			// HACK ALERT! (fallback for vanilla DOOM.WAD)
 			a->p[i] = anims[1][4].p[i]; 
 		    }
 		}
@@ -1734,9 +1733,8 @@ void WI_unloadData(void)
 	{
 	    for (j=0;j<NUMANIMS[wbs->epsd];j++)
 	    {
-		if (wbs->epsd != 1 || j != 8)
-		    for (i=0;i<anims[wbs->epsd][j].nanims;i++)
-			Z_ChangeTag(anims[wbs->epsd][j].p[i], PU_CACHE);
+			for (i=0;i<anims[wbs->epsd][j].nanims;i++)
+			    Z_ChangeTag(anims[wbs->epsd][j].p[i], PU_CACHE);
 	    }
 	}
     }
