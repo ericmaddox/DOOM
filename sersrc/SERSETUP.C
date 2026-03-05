@@ -331,7 +331,7 @@ void Connect (void)
 		if (time.ti_sec != oldsec)
 		{
 			oldsec = time.ti_sec;
-			sprintf (str,"ID%s_%i",idstr,localstage);
+			snprintf(str, sizeof(str), "ID%s_%i", idstr, localstage);
 			WritePacket (str,strlen(str));
 			printf ("wrote: %s\n",str);
 		}
@@ -501,7 +501,7 @@ void Dial (void)
 
 	printf ("\n"STR_DIALING"\n\n");
 	p = CheckParm ("-dial");
-	sprintf (cmd,"ATDT%s",myargv[p+1]);
+	snprintf(cmd, sizeof(cmd), "ATDT%s", myargv[p+1]);
 
 	ModemCommand(cmd);
 	ModemResponse (STR_CONNECT);
