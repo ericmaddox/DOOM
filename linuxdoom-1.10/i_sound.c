@@ -701,22 +701,10 @@ void I_ShutdownSound(void)
   }
 #else
   // Wait till all pending sounds are finished.
-  int done = 0;
-  int i;
   
-
-  // FIXME (below).
+  // FIXME: No proper channel output.
   fprintf( stderr, "I_ShutdownSound: NOT finishing pending sounds\n");
   fflush( stderr );
-  
-  while ( !done )
-  {
-    for( i=0 ; i<8 && !channels[i] ; i++);
-    
-    // FIXME. No proper channel output.
-    //if (i==8)
-    done=1;
-  }
 #ifdef SNDINTR
   I_SoundDelTimer();
 #endif
