@@ -741,11 +741,11 @@ I_InitSound()
   char buffer[256];
   
   if (getenv("DOOMWADDIR"))
-    sprintf(buffer, "%s/%s",
+    snprintf(buffer, sizeof(buffer), "%s/%s",
 	    getenv("DOOMWADDIR"),
 	    sndserver_filename);
   else
-    sprintf(buffer, "%s", sndserver_filename);
+    snprintf(buffer, sizeof(buffer), "%s", sndserver_filename);
   
   // start sound process
   if ( !access(buffer, X_OK) )
