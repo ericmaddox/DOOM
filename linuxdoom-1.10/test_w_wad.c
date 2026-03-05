@@ -9,10 +9,14 @@ jmp_buf error_jmp;
 int error_called = 0;
 char error_msg[256];
 
+#include <stdarg.h>
+
 void I_Error(char *error, ...) {
+    va_list argptr;
+    va_start(argptr, error);
     error_called = 1;
-    strncpy(error_msg, error, sizeof(error_msg) - 1);
-    error_msg[sizeof(error_msg) - 1] = '\0';
+    vsnprintf(error_msg, sizeof(error_msg), error, argptr);
+    va_end(argptr);
     longjmp(error_jmp, 1);
 }
 
@@ -68,8 +72,62 @@ void test_out_of_bounds_lump() {
         exit(1);
     } else {
         if (error_called) {
-            if (strstr(error_msg, "W_LumpLength: %i >= numlumps") != NULL) {
+            if (strstr(error_msg, "W_LumpLength: 1 >= numlumps") != NULL) {
                 printf("PASS: I_Error called for out-of-bounds lump with correct message\n");
+            } else {
+                printf("FAIL: I_Error called with wrong message: %s\n", error_msg);
+                exit(1);
+            }
+        } else {
+            printf("FAIL: Error jump occurred but error_called flag not set\n");
+            exit(1);
+        }
+    }
+}
+
+
+void test_w_getnumforname_valid() {
+    lumpinfo_t test_lumps[3] = {
+        {"LUMP0", 0, 0, 100},
+        {"LUMP1", 0, 0, 250},
+        {"LUMP2", 0, 0, 500}
+    };
+    lumpinfo = test_lumps;
+    numlumps = 3;
+
+    if (W_GetNumForName("LUMP0") != 0) {
+        printf("FAIL: Expected 0 for LUMP0\n");
+        exit(1);
+    }
+    if (W_GetNumForName("LUMP1") != 1) {
+        printf("FAIL: Expected 1 for LUMP1\n");
+        exit(1);
+    }
+    if (W_GetNumForName("LUMP2") != 2) {
+        printf("FAIL: Expected 2 for LUMP2\n");
+        exit(1);
+    }
+
+    printf("PASS: W_GetNumForName found valid lumps\n");
+}
+
+void test_w_getnumforname_not_found() {
+    lumpinfo_t test_lumps[1] = {
+        {"LUMP0", 0, 0, 100}
+    };
+    lumpinfo = test_lumps;
+    numlumps = 1;
+    error_called = 0;
+    error_msg[0] = '\0';
+
+    if (setjmp(error_jmp) == 0) {
+        W_GetNumForName("NOTFOUND");
+        printf("FAIL: I_Error was not called for missing lump\n");
+        exit(1);
+    } else {
+        if (error_called) {
+            if (strstr(error_msg, "W_GetNumForName: NOTFOUND not found!") != NULL) {
+                printf("PASS: I_Error called for missing lump with correct message\n");
             } else {
                 printf("FAIL: I_Error called with wrong message: %s\n", error_msg);
                 exit(1);
@@ -83,6 +141,8 @@ void test_out_of_bounds_lump() {
 
 int main() {
     printf("Running W_LumpLength tests...\n");
+    test_w_getnumforname_valid();
+    test_w_getnumforname_not_found();
     test_valid_lump();
     test_out_of_bounds_lump();
     printf("All W_LumpLength tests passed.\n");
