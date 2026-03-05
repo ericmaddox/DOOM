@@ -392,6 +392,27 @@ void F_StartCast (void)
 //
 // F_CastTicker
 //
+// Action functions used by the cast sequence
+extern void A_PosAttack(void);
+extern void A_SPosAttack(void);
+extern void A_VileStart(void);
+extern void A_SkelWhoosh(void);
+extern void A_SkelFist(void);
+extern void A_SkelMissile(void);
+extern void A_FatAttack1(void);
+extern void A_FatAttack2(void);
+extern void A_FatAttack3(void);
+extern void A_CPosAttack(void);
+extern void A_CPosRefire(void);
+extern void A_TroopAttack(void);
+extern void A_SargAttack(void);
+extern void A_HeadAttack(void);
+extern void A_BruisAttack(void);
+extern void A_SkullAttack(void);
+extern void A_BspiAttack(void);
+extern void A_CyberAttack(void);
+extern void A_PainAttack(void);
+
 void F_CastTicker (void)
 {
     int		st;
@@ -422,35 +443,33 @@ void F_CastTicker (void)
 	castframes++;
 	
 	// sound hacks....
-	switch (st)
+	sfx = 0;
+	if (caststate->action.acp1)
 	{
-	  case S_PLAY_ATK1:	sfx = sfx_dshtgn; break;
-	  case S_POSS_ATK2:	sfx = sfx_pistol; break;
-	  case S_SPOS_ATK2:	sfx = sfx_shotgn; break;
-	  case S_VILE_ATK2:	sfx = sfx_vilatk; break;
-	  case S_SKEL_FIST2:	sfx = sfx_skeswg; break;
-	  case S_SKEL_FIST4:	sfx = sfx_skepch; break;
-	  case S_SKEL_MISS2:	sfx = sfx_skeatk; break;
-	  case S_FATT_ATK8:
-	  case S_FATT_ATK5:
-	  case S_FATT_ATK2:	sfx = sfx_firsht; break;
-	  case S_CPOS_ATK2:
-	  case S_CPOS_ATK3:
-	  case S_CPOS_ATK4:	sfx = sfx_shotgn; break;
-	  case S_TROO_ATK3:	sfx = sfx_claw; break;
-	  case S_SARG_ATK2:	sfx = sfx_sgtatk; break;
-	  case S_BOSS_ATK2:
-	  case S_BOS2_ATK2:
-	  case S_HEAD_ATK2:	sfx = sfx_firsht; break;
-	  case S_SKULL_ATK2:	sfx = sfx_sklatk; break;
-	  case S_SPID_ATK2:
-	  case S_SPID_ATK3:	sfx = sfx_shotgn; break;
-	  case S_BSPI_ATK2:	sfx = sfx_plasma; break;
-	  case S_CYBER_ATK2:
-	  case S_CYBER_ATK4:
-	  case S_CYBER_ATK6:	sfx = sfx_rlaunc; break;
-	  case S_PAIN_ATK3:	sfx = sfx_sklatk; break;
-	  default: sfx = 0; break;
+	    actionf_p1 action = caststate->action.acp1;
+	    if (action == (actionf_p1)A_PosAttack) sfx = sfx_pistol;
+	    else if (action == (actionf_p1)A_SPosAttack) sfx = sfx_shotgn;
+	    else if (action == (actionf_p1)A_CPosAttack) sfx = sfx_shotgn;
+	    else if (action == (actionf_p1)A_CPosRefire) sfx = sfx_shotgn;
+	    else if (action == (actionf_p1)A_VileStart) sfx = sfx_vilatk;
+	    else if (action == (actionf_p1)A_SkelWhoosh) sfx = sfx_skeswg;
+	    else if (action == (actionf_p1)A_SkelFist) sfx = sfx_skepch;
+	    else if (action == (actionf_p1)A_SkelMissile) sfx = sfx_skeatk;
+	    else if (action == (actionf_p1)A_FatAttack1 ||
+		     action == (actionf_p1)A_FatAttack2 ||
+		     action == (actionf_p1)A_FatAttack3) sfx = sfx_firsht;
+	    else if (action == (actionf_p1)A_TroopAttack) sfx = sfx_claw;
+	    else if (action == (actionf_p1)A_SargAttack) sfx = sfx_sgtatk;
+	    else if (action == (actionf_p1)A_HeadAttack) sfx = sfx_firsht;
+	    else if (action == (actionf_p1)A_BruisAttack) sfx = sfx_firsht;
+	    else if (action == (actionf_p1)A_SkullAttack) sfx = sfx_sklatk;
+	    else if (action == (actionf_p1)A_BspiAttack) sfx = sfx_plasma;
+	    else if (action == (actionf_p1)A_CyberAttack) sfx = sfx_rlaunc;
+	    else if (action == (actionf_p1)A_PainAttack) sfx = sfx_sklatk;
+	}
+	else if (st == S_PLAY_ATK1)
+	{
+	    sfx = sfx_dshtgn;
 	}
 		
 	if (sfx)
