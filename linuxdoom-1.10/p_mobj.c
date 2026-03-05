@@ -675,6 +675,9 @@ void P_SpawnPlayer (mapthing_t* mthing)
     p->mo = mobj;
     p->playerstate = PST_LIVE;	
     p->refire = 0;
+    if (p->cheats & CF_NOCLIP)
+	p->mo->flags |= MF_NOCLIP;
+
     p->message = NULL;
     p->damagecount = 0;
     p->bonuscount = 0;
