@@ -1368,6 +1368,7 @@ G_InitNew
   int		map ) 
 { 
     int             i; 
+    char            name[9];
 	 
     if (paused) 
     { 
@@ -1380,36 +1381,36 @@ G_InitNew
 	skill = sk_nightmare;
 
 
-    // This was quite messy with SPECIAL and commented parts.
-    // Supposedly hacks to make the latest edition work.
-    // It might not work properly.
     if (episode < 1)
-      episode = 1; 
+	episode = 1;
+    if (map < 1)
+	map = 1;
 
-    if ( gamemode == retail )
+    if ( gamemode == commercial )
     {
-      if (episode > 4)
-	episode = 4;
+	if (map < 10)
+	    sprintf (name, "map0%i", map);
+	else
+	    sprintf (name, "map%i", map);
+
+	if (W_CheckNumForName (name) == -1)
+	    map = 1;
     }
-    else if ( gamemode == shareware )
-    {
-      if (episode > 1) 
-	   episode = 1;	// only start episode 1 on shareware
-    }  
     else
     {
-      if (episode > 3)
-	episode = 3;
+	name[0] = 'E';
+	name[1] = '0' + episode;
+	name[2] = 'M';
+	name[3] = '0' + map;
+	name[4] = 0;
+	if (W_CheckNumForName (name) == -1)
+	{
+	    name[3] = '1';
+	    if (W_CheckNumForName (name) == -1)
+		episode = 1;
+	    map = 1;
+	}
     }
-    
-
-  
-    if (map < 1) 
-	map = 1;
-    
-    if ( (map > 9)
-	 && ( gamemode != commercial) )
-      map = 9; 
 		 
     M_ClearRandom (); 
 	 
