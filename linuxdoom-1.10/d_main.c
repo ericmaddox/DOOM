@@ -659,6 +659,7 @@ void IdentifyVersion (void)
     if ( !access (doom2fwad,R_OK) )
     {
 	gamemode = commercial;
+	gamemission = doom2;
 	// C'est ridicule!
 	// Let's handle languages in config files, okay?
 	language = french;
@@ -670,6 +671,7 @@ void IdentifyVersion (void)
     if ( !access (doom2wad,R_OK) )
     {
 	gamemode = commercial;
+	gamemission = doom2;
 	D_AddFile (doom2wad);
 	return;
     }
@@ -677,6 +679,7 @@ void IdentifyVersion (void)
     if ( !access (plutoniawad, R_OK ) )
     {
       gamemode = commercial;
+      gamemission = pack_plut;
       D_AddFile (plutoniawad);
       return;
     }
@@ -684,6 +687,7 @@ void IdentifyVersion (void)
     if ( !access ( tntwad, R_OK ) )
     {
       gamemode = commercial;
+      gamemission = pack_tnt;
       D_AddFile (tntwad);
       return;
     }
@@ -839,28 +843,25 @@ void D_DoomMain (void)
 		 VERSION/100,VERSION%100);
 	break;
       case commercial:
-	sprintf (title,
-		 "                         "
-		 "DOOM 2: Hell on Earth v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
+	if (gamemission == pack_plut)
+	    sprintf (title,
+		     "                   "
+		     "DOOM 2: Plutonia Experiment v%i.%i"
+		     "                           ",
+		     VERSION/100,VERSION%100);
+	else if (gamemission == pack_tnt)
+	    sprintf (title,
+		     "                     "
+		     "DOOM 2: TNT - Evilution v%i.%i"
+		     "                           ",
+		     VERSION/100,VERSION%100);
+	else
+	    sprintf (title,
+		     "                         "
+		     "DOOM 2: Hell on Earth v%i.%i"
+		     "                           ",
+		     VERSION/100,VERSION%100);
 	break;
-/*FIXME
-       case pack_plut:
-	sprintf (title,
-		 "                   "
-		 "DOOM 2: Plutonia Experiment v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-      case pack_tnt:
-	sprintf (title,
-		 "                     "
-		 "DOOM 2: TNT - Evilution v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-*/
       default:
 	sprintf (title,
 		 "                     "

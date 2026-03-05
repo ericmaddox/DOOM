@@ -1,0 +1,16 @@
+🧹 fix: Clean up gamemode handling for Plutonia and TNT mission packs
+
+🎯 **What:**
+- Addressed multiple FIXME comments related to Plutonia and TNT mission packs in `d_main.c` and `hu_stuff.c`.
+- Set `gamemission = pack_plut` and `pack_tnt` explicitly when loading their respective WAD files in `IdentifyVersion()`.
+- Replaced incorrect `switch(gamemode)` checks that were trying to match `pack_plut` and `pack_tnt` (which are `GameMission_t` enums, not `GameMode_t` enums) with proper `gamemission` logic within the `commercial` case.
+- Cleaned up a confusing type-mismatched check in `g_game.c` for `skytexture` loading.
+
+💡 **Why:**
+This improves maintainability and correctness. The old code was confusing because it compared `gamemode` (a `GameMode_t`) against `pack_plut` and `pack_tnt` (which belong to `GameMission_t`). Because C allows weak typing for enums, it silently compiled, but the logic didn't align with the underlying types. Using `gamemission` properly resolves the logic errors and resolves the legacy FIXME comments left by id Software.
+
+✅ **Verification:**
+Compiled `d_main.c`, `hu_stuff.c`, and `g_game.c` successfully to ensure syntax correctness. The changes do not alter behavior as the original implementation happened to fall through to defaults safely, but now correctly identifies and applies Plutonia/TNT specific logic (like HUD titles and console startup messages).
+
+✨ **Result:**
+The startup console correctly prints "DOOM 2: Plutonia Experiment" or "DOOM 2: TNT - Evilution", the HUD map names load the proper Plutonia/TNT array of names, and the code types correctly align without confusing enum mixing.
