@@ -459,12 +459,11 @@ void D_AdvanceDemo (void)
     paused = false;
     gameaction = ga_nothing;
 
-    if ( gamemode == retail )
+    while (1)
+    {
       demosequence = (demosequence+1)%7;
-    else
-      demosequence = (demosequence+1)%6;
     
-    switch (demosequence)
+      switch (demosequence)
     {
       case 0:
 	if ( gamemode == commercial )
@@ -479,6 +478,7 @@ void D_AdvanceDemo (void)
 	  S_StartMusic (mus_intro);
 	break;
       case 1:
+	if (W_CheckNumForName("demo1") == -1) continue;
 	G_DeferedPlayDemo ("demo1");
 	break;
       case 2:
@@ -487,6 +487,7 @@ void D_AdvanceDemo (void)
 	pagename = "CREDIT";
 	break;
       case 3:
+	if (W_CheckNumForName("demo2") == -1) continue;
 	G_DeferedPlayDemo ("demo2");
 	break;
       case 4:
@@ -508,12 +509,16 @@ void D_AdvanceDemo (void)
 	}
 	break;
       case 5:
+	if (W_CheckNumForName("demo3") == -1) continue;
 	G_DeferedPlayDemo ("demo3");
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
+	if (W_CheckNumForName("demo4") == -1) continue;
 	G_DeferedPlayDemo ("demo4");
 	break;
+    }
+    break;
     }
 }
 
@@ -1151,9 +1156,9 @@ void D_DoomMain (void)
     if (p && p < myargc-1)
     {
 	if (M_CheckParm("-cdrom"))
-	    sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+	    sprintf(file, "c:\\doomdata\\" SAVEGAMENAME "%c.dsg",myargv[p+1][0]);
 	else
-	    sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+	    sprintf(file, SAVEGAMENAME "%c.dsg",myargv[p+1][0]);
 	G_LoadGame (file);
     }
 	
