@@ -397,6 +397,7 @@ void ModemResponse (char *resp)
 {
 	int		c;
 	int		respptr;
+	int		resplen = strlen(resp);
 
 	do
 	{
@@ -425,7 +426,7 @@ void ModemResponse (char *resp)
 			}
 		} while (1);
 
-	} while (strncmp(response,resp,strlen(resp)));
+	} while (strncmp(response,resp,resplen));
 }
 
 
