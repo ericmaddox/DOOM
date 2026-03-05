@@ -1603,21 +1603,13 @@ void WI_loadData(void)
 	{
 	    for (j=0;j<NUMANIMS[wbs->epsd];j++)
 	    {
+		int anim_j = (wbs->epsd == 1 && j == 8) ? 4 : j;
 		a = &anims[wbs->epsd][j];
 		for (i=0;i<a->nanims;i++)
 		{
-		    // MONDO HACK!
-		    if (wbs->epsd != 1 || j != 8) 
-		    {
-			// animations
-			sprintf(name, "WIA%d%.2d%.2d", wbs->epsd, j, i);  
-			a->p[i] = W_CacheLumpName(name, PU_STATIC);
-		    }
-		    else
-		    {
-			// HACK ALERT!
-			a->p[i] = anims[1][4].p[i]; 
-		    }
+		    // animations
+		    sprintf(name, "WIA%d%.2d%.2d", wbs->epsd, anim_j, i);
+		    a->p[i] = W_CacheLumpName(name, PU_STATIC);
 		}
 	    }
 	}
