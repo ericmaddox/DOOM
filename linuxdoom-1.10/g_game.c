@@ -1276,9 +1276,9 @@ void G_DoSaveGame (void)
     int		i; 
 	
     if (M_CheckParm("-cdrom"))
-	sprintf(name,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",savegameslot);
+	snprintf(name, sizeof(name), "c:\\doomdata\\"SAVEGAMENAME"%d.dsg", savegameslot);
     else
-	sprintf (name,SAVEGAMENAME"%d.dsg",savegameslot); 
+	snprintf(name, sizeof(name), SAVEGAMENAME"%d.dsg", savegameslot);
     description = savedescription; 
 	 
     save_p = savebuffer = screens[1]+0x4000; 
@@ -1286,7 +1286,7 @@ void G_DoSaveGame (void)
     memcpy (save_p, description, SAVESTRINGSIZE); 
     save_p += SAVESTRINGSIZE; 
     memset (name2,0,sizeof(name2)); 
-    sprintf (name2,"version %i",VERSION); 
+    snprintf(name2, sizeof(name2), "version %i", VERSION);
     memcpy (save_p, name2, VERSIONSIZE); 
     save_p += VERSIONSIZE; 
 	 
