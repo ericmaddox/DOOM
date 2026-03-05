@@ -99,17 +99,18 @@ unsigned NetbufferChecksum (void)
 {
     unsigned		c;
     int		i,l;
+    byte*		buf;
+    unsigned val;
 
     c = 0x1234567;
 
-    // FIXME -endianess?
-#ifdef NORMALUNIX
-    return 0;			// byte order problems
-#endif
-
     l = (NetbufferSize () - (int)&(((doomdata_t *)0)->retransmitfrom))/4;
+    buf = (byte*)&netbuffer->retransmitfrom;
     for (i=0 ; i<l ; i++)
-	c += ((unsigned *)&netbuffer->retransmitfrom)[i] * (i+1);
+    {
+	val = buf[i*4] | (buf[i*4+1] << 8) | (buf[i*4+2] << 16) | (buf[i*4+3] << 24);
+	c += val * (i+1);
+    }
 
     return c & NCMD_CHECKSUM;
 }

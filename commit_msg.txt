@@ -1,0 +1,17 @@
+🧹 [Code Health] Fix Endianness Issue in Network Packet Checksum
+
+🎯 What:
+Fixed the endianness issue in `NetbufferChecksum` calculation in `linuxdoom-1.10/d_net.c`.
+The original code disabled the checksum for UNIX platforms due to byte-order issues, replacing it with a hardcoded `0`, while the DOS code calculated it using a memory-cast to a sequence of `unsigned` integers.
+
+💡 Why:
+The previous behavior meant network checksums depended on the endianness of the host machine compiling the code (casting an arbitrary byte payload directly to `unsigned` creates issues between big and little-endian hardware).
+This PR rewrites the logic to reconstruct the `unsigned` values by shifting `byte` pointers manually matching the MS-DOS logic (which is little-endian). This eliminates the need for the `#ifdef NORMALUNIX` bypass and fixes the `FIXME -endianess?` comment, ensuring robust cross-architecture netplay checksum calculations.
+
+✅ Verification:
+1. Validated logic with ad-hoc C test scripts `test_checksum.c` computing checksum the old way vs the manual byte reading logic to ensure it behaves exactly exactly as expected on little endian hosts.
+2. Compiled `d_net.c` successfully under the `-DNORMALUNIX` directive flag.
+3. Verified the new logic matches C89 structure (i.e. all variables declared at top of scope).
+
+✨ Result:
+Clean, endian-agnostic packet checksumming logic that works equally well across Linux distributions on varying CPU architectures.
