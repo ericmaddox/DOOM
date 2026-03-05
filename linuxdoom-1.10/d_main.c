@@ -677,6 +677,7 @@ void IdentifyVersion (void)
     if ( !access (plutoniawad, R_OK ) )
     {
       gamemode = commercial;
+      gamemission = pack_plut;
       D_AddFile (plutoniawad);
       return;
     }
@@ -684,6 +685,7 @@ void IdentifyVersion (void)
     if ( !access ( tntwad, R_OK ) )
     {
       gamemode = commercial;
+      gamemission = pack_tnt;
       D_AddFile (tntwad);
       return;
     }
@@ -815,59 +817,57 @@ void D_DoomMain (void)
     else if (M_CheckParm ("-deathmatch"))
 	deathmatch = 1;
 
-    switch ( gamemode )
-    {
-      case retail:
-	sprintf (title,
-		 "                         "
-		 "The Ultimate DOOM Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-      case shareware:
-	sprintf (title,
-		 "                            "
-		 "DOOM Shareware Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-      case registered:
-	sprintf (title,
-		 "                            "
-		 "DOOM Registered Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-      case commercial:
-	sprintf (title,
-		 "                         "
-		 "DOOM 2: Hell on Earth v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-/*FIXME
-       case pack_plut:
+    if (gamemission == pack_plut) {
 	sprintf (title,
 		 "                   "
 		 "DOOM 2: Plutonia Experiment v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
-	break;
-      case pack_tnt:
+    } else if (gamemission == pack_tnt) {
 	sprintf (title,
 		 "                     "
 		 "DOOM 2: TNT - Evilution v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
-	break;
-*/
-      default:
-	sprintf (title,
-		 "                     "
-		 "Public DOOM - v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
+    } else {
+	switch ( gamemode )
+	{
+	  case retail:
+		sprintf (title,
+			 "                         "
+			 "The Ultimate DOOM Startup v%i.%i"
+			 "                           ",
+			 VERSION/100,VERSION%100);
+		break;
+	  case shareware:
+		sprintf (title,
+			 "                            "
+			 "DOOM Shareware Startup v%i.%i"
+			 "                           ",
+			 VERSION/100,VERSION%100);
+		break;
+	  case registered:
+		sprintf (title,
+			 "                            "
+			 "DOOM Registered Startup v%i.%i"
+			 "                           ",
+			 VERSION/100,VERSION%100);
+		break;
+	  case commercial:
+		sprintf (title,
+			 "                         "
+			 "DOOM 2: Hell on Earth v%i.%i"
+			 "                           ",
+			 VERSION/100,VERSION%100);
+		break;
+	  default:
+		sprintf (title,
+			 "                     "
+			 "Public DOOM - v%i.%i"
+			 "                           ",
+			 VERSION/100,VERSION%100);
+		break;
+	}
     }
     
     printf ("%s\n",title);
