@@ -44,13 +44,28 @@ int M_CheckParm (char *check)
 
     for (i = 1;i<myargc;i++)
     {
+	if ( !myargv[i] )
+	    continue;
 	if ( !strcasecmp(check, myargv[i]) )
 	    return i;
     }
 
+    // didn't find it, so check for a - parameter
+    if (check[0] == '-')
+    {
+	char        newstring[256];
+
+	strncpy(newstring, check+1, sizeof(newstring) - 1);
+	newstring[sizeof(newstring) - 1] = 0;
+
+	for (i=1; i<myargc; i++)
+	{
+	    if ( !myargv[i] )
+		continue;
+	    if ( !strcasecmp (newstring, myargv[i]) )
+		return i;
+	}
+    }
+
     return 0;
 }
-
-
-
-
