@@ -398,33 +398,13 @@ void R_DrawTranslatedColumn (void)
 	|| dc_yl < 0
 	|| dc_yh >= SCREENHEIGHT)
     {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
+	I_Error ( "R_DrawTranslatedColumn: %i to %i at %i",
 		  dc_yl, dc_yh, dc_x);
     }
     
 #endif 
 
 
-    // WATCOM VGA specific.
-    /* Keep for fixing.
-    if (detailshift)
-    {
-	if (dc_x & 1)
-	    outp (SC_INDEX+1,12); 
-	else
-	    outp (SC_INDEX+1,3);
-	
-	dest = destview + dc_yl*80 + (dc_x>>1); 
-    }
-    else
-    {
-	outp (SC_INDEX+1,1<<(dc_x&3)); 
-
-	dest = destview + dc_yl*80 + (dc_x>>2); 
-    }*/
-
-    
-    // FIXME. As above.
     dest = ylookup[dc_yl] + columnofs[dc_x]; 
 
     // Looks familiar.
@@ -447,6 +427,48 @@ void R_DrawTranslatedColumn (void)
 } 
 
 
+void R_DrawTranslatedColumnLow (void)
+{
+    int			count;
+    byte*		dest;
+    byte*		dest2;
+    fixed_t		frac;
+    fixed_t		fracstep;
+
+    count = dc_yh - dc_yl;
+    if (count < 0)
+	return;
+
+#ifdef RANGECHECK
+    if ((unsigned)dc_x >= SCREENWIDTH
+	|| dc_yl < 0
+	|| dc_yh >= SCREENHEIGHT)
+    {
+	I_Error ( "R_DrawTranslatedColumnLow: %i to %i at %i",
+		  dc_yl, dc_yh, dc_x);
+    }
+#endif
+
+    // Blocky mode, need to multiply by 2.
+    dc_x <<= 1;
+
+    dest = ylookup[dc_yl] + columnofs[dc_x];
+    dest2 = ylookup[dc_yl] + columnofs[dc_x+1];
+
+    // Looks familiar.
+    fracstep = dc_iscale;
+    frac = dc_texturemid + (dc_yl-centery)*fracstep;
+
+    // Here we do an additional index re-mapping.
+    do
+    {
+	*dest2 = *dest = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
+	dest += SCREENWIDTH;
+	dest2 += SCREENWIDTH;
+
+	frac += fracstep;
+    } while (count--);
+}
 
 
 //
