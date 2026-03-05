@@ -705,21 +705,22 @@ void I_ShutdownSound(void)
   int i;
   
 
-  // FIXME (below).
-  fprintf( stderr, "I_ShutdownSound: NOT finishing pending sounds\n");
-  fflush( stderr );
-  
+#ifdef SNDINTR
+  I_SoundDelTimer();
+#endif
+
   while ( !done )
   {
     for( i=0 ; i<8 && !channels[i] ; i++);
     
-    // FIXME. No proper channel output.
-    //if (i==8)
-    done=1;
+    if (i==8)
+      done=1;
+    else
+    {
+      I_UpdateSound();
+      I_SubmitSound();
+    }
   }
-#ifdef SNDINTR
-  I_SoundDelTimer();
-#endif
   
   // Cleaning up -releasing the DSP device.
   close ( audio_fd );
