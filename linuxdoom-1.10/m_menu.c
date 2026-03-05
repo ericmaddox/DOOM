@@ -1257,8 +1257,9 @@ int M_StringWidth(char* string)
     int             i;
     int             w = 0;
     int             c;
+    size_t          len = strlen(string);
 	
-    for (i = 0;i < strlen(string);i++)
+    for (i = 0;i < len;i++)
     {
 	c = toupper(string[i]) - HU_FONTSTART;
 	if (c < 0 || c >= HU_FONTSIZE)
@@ -1280,9 +1281,10 @@ int M_StringHeight(char* string)
     int             i;
     int             h;
     int             height = SHORT(hu_font[0]->height);
+    size_t          len = strlen(string);
 	
     h = height;
-    for (i = 0;i < strlen(string);i++)
+    for (i = 0;i < len;i++)
 	if (string[i] == '\n')
 	    h += height;
 		
@@ -1756,7 +1758,8 @@ void M_Drawer (void)
 	y = 100 - M_StringHeight(messageString)/2;
 	while(*(messageString+start))
 	{
-	    for (i = 0;i < strlen(messageString+start);i++)
+            size_t len = strlen(messageString+start);
+	    for (i = 0;i < len;i++)
 		if (*(messageString+start+i) == '\n')
 		{
 		    memset(string,0,40);
@@ -1765,7 +1768,7 @@ void M_Drawer (void)
 		    break;
 		}
 				
-	    if (i == strlen(messageString+start))
+	    if (i == len)
 	    {
 		strcpy(string,messageString+start);
 		start += i;
