@@ -359,7 +359,7 @@ void D_DoomLoop (void)
     if (M_CheckParm ("-debugfile"))
     {
 	char    filename[20];
-	sprintf (filename,"debug%i.txt",consoleplayer);
+	snprintf (filename, sizeof(filename), "debug%i.txt", consoleplayer);
 	printf ("debug output to: %s\n",filename);
 	debugfile = fopen (filename,"w");
     }
@@ -582,37 +582,37 @@ void IdentifyVersion (void)
 
     // Commercial.
     doom2wad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(doom2wad, "%s/doom2.wad", doomwaddir);
+    snprintf(doom2wad, strlen(doomwaddir)+1+9+1, "%s/doom2.wad", doomwaddir);
 
     // Retail.
-    doomuwad = malloc(strlen(doomwaddir)+1+8+1);
-    sprintf(doomuwad, "%s/doomu.wad", doomwaddir);
+    doomuwad = malloc(strlen(doomwaddir)+1+9+1);
+    snprintf(doomuwad, strlen(doomwaddir)+1+9+1, "%s/doomu.wad", doomwaddir);
     
     // Registered.
     doomwad = malloc(strlen(doomwaddir)+1+8+1);
-    sprintf(doomwad, "%s/doom.wad", doomwaddir);
+    snprintf(doomwad, strlen(doomwaddir)+1+8+1, "%s/doom.wad", doomwaddir);
     
     // Shareware.
     doom1wad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(doom1wad, "%s/doom1.wad", doomwaddir);
+    snprintf(doom1wad, strlen(doomwaddir)+1+9+1, "%s/doom1.wad", doomwaddir);
 
      // Bug, dear Shawn.
     // Insufficient malloc, caused spurious realloc errors.
     plutoniawad = malloc(strlen(doomwaddir)+1+/*9*/12+1);
-    sprintf(plutoniawad, "%s/plutonia.wad", doomwaddir);
+    snprintf(plutoniawad, strlen(doomwaddir)+1+12+1, "%s/plutonia.wad", doomwaddir);
 
-    tntwad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(tntwad, "%s/tnt.wad", doomwaddir);
+    tntwad = malloc(strlen(doomwaddir)+1+7+1);
+    snprintf(tntwad, strlen(doomwaddir)+1+7+1, "%s/tnt.wad", doomwaddir);
 
 
     // French stuff.
     doom2fwad = malloc(strlen(doomwaddir)+1+10+1);
-    sprintf(doom2fwad, "%s/doom2f.wad", doomwaddir);
+    snprintf(doom2fwad, strlen(doomwaddir)+1+10+1, "%s/doom2f.wad", doomwaddir);
 
     home = getenv("HOME");
     if (!home)
       I_Error("Please set $HOME to your home directory");
-    sprintf(basedefault, "%s/.doomrc", home);
+    snprintf(basedefault, sizeof(basedefault), "%s/.doomrc", home);
 #endif
 
     if (M_CheckParm ("-shdev"))
@@ -818,28 +818,28 @@ void D_DoomMain (void)
     switch ( gamemode )
     {
       case retail:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                         "
 		 "The Ultimate DOOM Startup v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
 	break;
       case shareware:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                            "
 		 "DOOM Shareware Startup v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
 	break;
       case registered:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                            "
 		 "DOOM Registered Startup v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
 	break;
       case commercial:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                         "
 		 "DOOM 2: Hell on Earth v%i.%i"
 		 "                           ",
@@ -847,14 +847,14 @@ void D_DoomMain (void)
 	break;
 /*FIXME
        case pack_plut:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                   "
 		 "DOOM 2: Plutonia Experiment v%i.%i"
 		 "                           ",
 		 VERSION/100,VERSION%100);
 	break;
       case pack_tnt:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                     "
 		 "DOOM 2: TNT - Evilution v%i.%i"
 		 "                           ",
@@ -862,7 +862,7 @@ void D_DoomMain (void)
 	break;
 */
       default:
-	sprintf (title,
+	snprintf (title, sizeof(title),
 		 "                     "
 		 "Public DOOM - v%i.%i"
 		 "                           ",
@@ -918,7 +918,7 @@ void D_DoomMain (void)
 	  case shareware:
 	  case retail:
 	  case registered:
-	    sprintf (file,"~"DEVMAPS"E%cM%c.wad",
+	    snprintf (file, sizeof(file), "~"DEVMAPS"E%cM%c.wad",
 		     myargv[p+1][0], myargv[p+2][0]);
 	    printf("Warping to Episode %s, Map %s.\n",
 		   myargv[p+1],myargv[p+2]);
@@ -928,9 +928,9 @@ void D_DoomMain (void)
 	  default:
 	    p = atoi (myargv[p+1]);
 	    if (p<10)
-	      sprintf (file,"~"DEVMAPS"cdata/map0%i.wad", p);
+	      snprintf (file, sizeof(file), "~"DEVMAPS"cdata/map0%i.wad", p);
 	    else
-	      sprintf (file,"~"DEVMAPS"cdata/map%i.wad", p);
+	      snprintf (file, sizeof(file), "~"DEVMAPS"cdata/map%i.wad", p);
 	    break;
 	}
 	D_AddFile (file);
@@ -953,7 +953,7 @@ void D_DoomMain (void)
 
     if (p && p < myargc-1)
     {
-	sprintf (file,"%s.lmp", myargv[p+1]);
+	snprintf (file, sizeof(file), "%s.lmp", myargv[p+1]);
 	D_AddFile (file);
 	printf("Playing demo %s.lmp.\n",myargv[p+1]);
     }
@@ -1152,9 +1152,9 @@ void D_DoomMain (void)
     if (p && p < myargc-1)
     {
 	if (M_CheckParm("-cdrom"))
-	    sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+	    snprintf(file, sizeof(file), "c:\\doomdata\\"SAVEGAMENAME"%c.dsg", myargv[p+1][0]);
 	else
-	    sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+	    snprintf(file, sizeof(file), SAVEGAMENAME"%c.dsg", myargv[p+1][0]);
 	G_LoadGame (file);
     }
 	
