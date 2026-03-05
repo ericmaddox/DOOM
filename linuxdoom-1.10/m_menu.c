@@ -1756,7 +1756,9 @@ void M_Drawer (void)
 	y = 100 - M_StringHeight(messageString)/2;
 	while(*(messageString+start))
 	{
-	    for (i = 0;i < strlen(messageString+start);i++)
+	    int len = strlen(messageString+start);
+
+	    for (i = 0;i < len;i++)
 		if (*(messageString+start+i) == '\n')
 		{
 		    memset(string,0,40);
@@ -1765,7 +1767,7 @@ void M_Drawer (void)
 		    break;
 		}
 				
-	    if (i == strlen(messageString+start))
+	    if (i == len)
 	    {
 		strcpy(string,messageString+start);
 		start += i;
