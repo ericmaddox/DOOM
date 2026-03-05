@@ -647,7 +647,8 @@ void M_SaveSelect(int choice)
     saveStringEnter = 1;
     
     saveSlot = choice;
-    strcpy(saveOldString,savegamestrings[choice]);
+    strncpy(saveOldString, savegamestrings[choice], sizeof(saveOldString) - 1);
+    saveOldString[sizeof(saveOldString) - 1] = 0;
     if (!strcmp(savegamestrings[choice],EMPTYSTRING))
 	savegamestrings[choice][0] = 0;
     saveCharIndex = strlen(savegamestrings[choice]);
@@ -1466,7 +1467,8 @@ boolean M_Responder (event_t* ev)
 				
 	  case KEY_ESCAPE:
 	    saveStringEnter = 0;
-	    strcpy(&savegamestrings[saveSlot][0],saveOldString);
+	    strncpy(&savegamestrings[saveSlot][0], saveOldString, sizeof(savegamestrings[saveSlot]) - 1);
+	    savegamestrings[saveSlot][sizeof(savegamestrings[saveSlot]) - 1] = 0;
 	    break;
 				
 	  case KEY_ENTER:
